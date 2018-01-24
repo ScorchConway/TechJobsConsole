@@ -7,6 +7,13 @@ namespace TechJobsConsole
 {
     class JobData
     {
+        //each dictionary in AllJobs has the format: 
+        //name: Social Media Manager
+        //employer: Excy
+        //location: Seattle
+        //position type: Technical Writer
+        //core competency: Non-coding
+
         static List<Dictionary<string, string>> AllJobs = new List<Dictionary<string, string>>();
         static bool IsDataLoaded = false;
 
@@ -38,16 +45,22 @@ namespace TechJobsConsole
             return values;
         }
 
+        /*
+         * TOOD: these are informational at this point, but are actually bad reference docs.
+         * param string column: will be a key in each dictionary describing the job (eg "position type")
+         * param string value: a search term the user has entered
+         */
         public static List<Dictionary<string, string>> FindByColumnAndValue(string column, string value)
         {
             // load data, if not already loaded
             LoadData();
 
+            value = value.ToLower();
             List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
 
             foreach (Dictionary<string, string> row in AllJobs)
             {
-                string aValue = row[column];
+                string aValue = row[column].ToLower();
 
                 if (aValue.Contains(value))
                 {
@@ -56,6 +69,32 @@ namespace TechJobsConsole
             }
 
             return jobs;
+        }
+        
+        /*
+         * @param string value: a search term the user has entered
+         * @returns a list of jobs(dictionaries) that contain the param value
+         */
+        public static List<Dictionary<string, string>> FindByValue(string value)
+        {
+            // load data, if not already loaded
+            LoadData();
+
+            List<Dictionary<string, string>> result = new List<Dictionary<string, string>>();
+
+            foreach (Dictionary<string, string> job in AllJobs)
+            {
+                foreach (KeyValuePair<string, string> kv in job)
+                {
+                    if (kv.Value.ToLower().Contains(value.ToLower()) && ! result.Contains(job))
+                        {
+                        result.Add(job);
+                        continue;
+                        }
+                }
+            }
+
+            return result;
         }
 
         /*

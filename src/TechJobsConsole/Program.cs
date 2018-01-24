@@ -51,7 +51,7 @@ namespace TechJobsConsole
                 }
                 else // choice is "search"
                 {
-                    // How does the user want to search (e.g. by skill or employer)
+                    // How does the user want to search ( by skill, employer, location, position type, or all)
                     string columnChoice = GetUserSelection("Search", columnChoices);
 
                     // What is their search term?
@@ -63,7 +63,8 @@ namespace TechJobsConsole
                     // Fetch results
                     if (columnChoice.Equals("all"))
                     {
-                        Console.WriteLine("Search all fields not yet implemented.");
+                        searchResults = JobData.FindByValue(searchTerm);
+                        PrintJobs(searchResults);
                     }
                     else
                     {
@@ -116,9 +117,27 @@ namespace TechJobsConsole
             return choiceKeys[choiceIdx];
         }
 
+        /*
+         * param someJobs in the format: name:junior dev, employer:Cerner, location:mars, etc
+         */
         private static void PrintJobs(List<Dictionary<string, string>> someJobs)
         {
-            Console.WriteLine("printJobs is not implemented yet");
+            if (someJobs.Count < 1)
+            {
+                Console.WriteLine("*****");
+                Console.Write("Returned no results.");
+                Console.WriteLine("*****");
+            }
+
+            foreach (Dictionary<string, string> job in someJobs)
+            {
+                Console.WriteLine("*****");
+                foreach (KeyValuePair<string, string> kv in job)
+                {
+                    Console.WriteLine(kv.Key + ": " + kv.Value);
+                }
+                Console.WriteLine("*****");
+            }
         }
     }
 }
